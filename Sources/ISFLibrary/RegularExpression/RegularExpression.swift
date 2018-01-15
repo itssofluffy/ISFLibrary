@@ -1,7 +1,7 @@
 /*
     RegularExpression.swift
 
-    Copyright (c) 2017 Stephen Whittle  All rights reserved.
+    Copyright (c) 2017, 2018 Stephen Whittle  All rights reserved.
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"),
@@ -22,81 +22,78 @@
 
 import Foundation
 
-#if os(OSX) || os(iOS) || os(watchOS) || os(tvOS)
+#if swift(>=3.2) || !os(Linux)
 
-    public func makeRegex(with pattern: String, options: NSRegularExpression.Options = []) throws -> NSRegularExpression {
-        return try NSRegularExpression(pattern: pattern, options: options)
+public func makeRegex(with pattern: String, options: NSRegularExpression.Options = []) throws -> NSRegularExpression {
+    return try NSRegularExpression(pattern: pattern, options: options)
+}
+
+public extension String {
+    public func match(with pattern: NSRegularExpression) -> Int {
+        return pattern.numberOfMatches(in: self, options: [], range: NSRange(location: 0, length: self.count))
     }
 
-    public extension String {
-        public func match(with pattern: NSRegularExpression) -> Int {
-            return pattern.numberOfMatches(in: self, options: [], range: NSRange(location: 0, length: self.characters.count))
-        }
-
-        public func match(with pattern: NSRegularExpression) -> Bool {
-            return (self.match(with: pattern) > 0)
-        }
-
-        public func match(with pattern: String, options: NSRegularExpression.Options = []) throws -> Int {
-            return try self.match(with: makeRegex(with: pattern, options: options))
-        }
-
-        public func match(with pattern: String, options: NSRegularExpression.Options = []) throws -> Bool {
-            return try (self.match(with: pattern, options: options) > 0)
-        }
+    public func match(with pattern: NSRegularExpression) -> Bool {
+        return (self.match(with: pattern) > 0)
     }
 
-    infix operator =~: ComparisonPrecedence
-    infix operator !~: ComparisonPrecedence
-
-    @inline(__always)
-    public func =~(lhs: String, pattern: NSRegularExpression) -> Bool {
-        return (!lhs.isEmpty && lhs.match(with: pattern))
+    public func match(with pattern: String, options: NSRegularExpression.Options = []) throws -> Int {
+        return try self.match(with: makeRegex(with: pattern, options: options))
     }
 
-    @inline(__always)
-    public func !~(lhs: String, pattern: NSRegularExpression) -> Bool {
-        return !(lhs =~ pattern)
+    public func match(with pattern: String, options: NSRegularExpression.Options = []) throws -> Bool {
+        return try (self.match(with: pattern, options: options) > 0)
     }
+}
+
+@inline(__always)
+public func =~(lhs: String, pattern: NSRegularExpression) -> Bool {
+    return (!lhs.isEmpty && lhs.match(with: pattern))
+}
+
+@inline(__always)
+public func !~(lhs: String, pattern: NSRegularExpression) -> Bool {
+    return !(lhs =~ pattern)
+}
 
 #else
     
-    public func makeRegex(with pattern: String, options: RegularExpression.Options = []) throws -> RegularExpression {
-        return try RegularExpression(pattern: pattern, options: options)
-    }
+public func makeRegex(with pattern: String, options: RegularExpression.Options = []) throws -> RegularExpression {
+    return try RegularExpression(pattern: pattern, options: options)
+}
     
-    public extension String {
-        public func match(with pattern: RegularExpression) -> Int {
-            return pattern.numberOfMatches(in: self, options: [], range: NSRange(location: 0, length: self.characters.count))
-        }
+public extension String {
+    public func match(with pattern: RegularExpression) -> Int {
+        return pattern.numberOfMatches(in: self, options: [], range: NSRange(location: 0, length: self.characters.count))
+    }
         
-        public func match(with pattern: RegularExpression) -> Bool {
-            return (self.match(with: pattern) > 0)
-        }
+    public func match(with pattern: RegularExpression) -> Bool {
+        return (self.match(with: pattern) > 0)
+    }
         
-        public func match(with pattern: String, options: RegularExpression.Options = []) throws -> Int {
-            return try self.match(with: makeRegex(with: pattern, options: options))
-        }
+    public func match(with pattern: String, options: RegularExpression.Options = []) throws -> Int {
+        return try self.match(with: makeRegex(with: pattern, options: options))
+    }
         
-        public func match(with pattern: String, options: RegularExpression.Options = []) throws -> Bool {
-            return try (self.match(with: pattern, options: options) > 0)
-        }
+    public func match(with pattern: String, options: RegularExpression.Options = []) throws -> Bool {
+        return try (self.match(with: pattern, options: options) > 0)
     }
+}
     
-    infix operator =~: ComparisonPrecedence
-    infix operator !~: ComparisonPrecedence
+@inline(__always)
+public func =~(lhs: String, pattern: RegularExpression) -> Bool {
+    return (!lhs.isEmpty && lhs.match(with: pattern))
+}
     
-    @inline(__always)
-    public func =~(lhs: String, pattern: RegularExpression) -> Bool {
-        return (!lhs.isEmpty && lhs.match(with: pattern))
-    }
-    
-    @inline(__always)
-    public func !~(lhs: String, pattern: RegularExpression) -> Bool {
-        return !(lhs =~ pattern)
-    }
-    
+@inline(__always)
+public func !~(lhs: String, pattern: RegularExpression) -> Bool {
+    return !(lhs =~ pattern)
+}
+
 #endif
+
+infix operator =~: ComparisonPrecedence
+infix operator !~: ComparisonPrecedence
 
 @inline(__always)
 public func =~(lhs: String, pattern: String) -> Bool {

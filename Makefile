@@ -16,6 +16,6 @@ docs:
 	swift package generate-xcodeproj
 
 clean:
-	swift build --clean
+	swift package clean
 
 .PHONY: build build-release test runtest docs clean

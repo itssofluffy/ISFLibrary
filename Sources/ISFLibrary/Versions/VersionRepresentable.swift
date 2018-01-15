@@ -1,7 +1,7 @@
 /*
     VersionRepresentable.swift
 
-    Copyright (c) 2017 Stephen Whittle  All rights reserved.
+    Copyright (c) 2017, 2018 Stephen Whittle  All rights reserved.
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"),
@@ -22,7 +22,11 @@
 
 import Foundation
 
+#if swift(>=3.2)
+public protocol VersionRepresentable: RawRepresentable, Comparable, CustomStringConvertible { }
+#else
 public protocol VersionRepresentable: RawRepresentable, Comparable, Equatable, CustomStringConvertible { }
+#endif
 
 extension VersionRepresentable {
     internal func getVersion(from string: String) -> Array<UInt>? {

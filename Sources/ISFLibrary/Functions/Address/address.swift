@@ -1,7 +1,7 @@
 /*
     address.swift
 
-    Copyright (c) 2017 Stephen Whittle  All rights reserved.
+    Copyright (c) 2017, 2018 Stephen Whittle  All rights reserved.
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"),
@@ -21,5 +21,9 @@
 */
 
 public func address(of object: UnsafeRawPointer) -> Int {
+#if swift(>=3.2)
+    return Int(bitPattern: object)
+#else
     return unsafeBitCast(object, to: Int.self)
+#endif
 }

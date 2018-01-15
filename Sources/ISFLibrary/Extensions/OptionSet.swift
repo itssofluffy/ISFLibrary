@@ -1,7 +1,7 @@
 /*
     OptionSet.swift
 
-    Copyright (c) 2017 Stephen Whittle  All rights reserved.
+    Copyright (c) 2017, 2018 Stephen Whittle  All rights reserved.
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"),
@@ -21,6 +21,34 @@
 */
 
 // See https://stackoverflow.com/questions/32102936/how-do-you-enumerate-optionsettype-in-swift#32103136
+
+#if swift(>=3.2)
+
+public extension OptionSet where RawValue: FixedWidthInteger {
+    public func elements() -> AnySequence<Self> {
+        var remainingBits = rawValue
+        var bitMask: RawValue = 1
+
+        return AnySequence {
+            return AnyIterator {
+                while (remainingBits != 0) {
+                    defer { bitMask = bitMask &* 2 }
+
+                    if (remainingBits & bitMask != 0) {
+                        remainingBits = remainingBits & ~bitMask
+
+                        return Self(rawValue: bitMask)
+                    }
+                }
+
+                return nil
+            }
+        }
+    }
+}
+
+#else
+
 public extension OptionSet where RawValue: Integer {
     public func elements() -> AnySequence<Self> {
         var remainingBits = rawValue
@@ -43,3 +71,5 @@ public extension OptionSet where RawValue: Integer {
         }
     }
 }
+
+#endif
