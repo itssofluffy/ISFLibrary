@@ -30,7 +30,7 @@ public func makeRegex(with pattern: String, options: NSRegularExpression.Options
 
 public extension String {
     public func match(with pattern: NSRegularExpression) -> Int {
-        return pattern.numberOfMatches(in: self, options: [], range: NSRange(location: 0, length: self.count))
+        return pattern.numberOfMatches(in: self, options: [], range: NSRange(location: 0, length: self.utf8.count))
     }
 
     public func match(with pattern: NSRegularExpression) -> Bool {
