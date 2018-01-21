@@ -1,7 +1,7 @@
 /*
-    StringTests.swift
+    DataTests.swift
 
-    Copyright (c) 2017 Stephen Whittle  All rights reserved.
+    Copyright (c) 2017, 2018 Stephen Whittle  All rights reserved.
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"),
@@ -54,7 +54,7 @@ class DataTests: XCTestCase {
         XCTAssertLessThan(data1, data2, "\(data1) is not less than \(data2)!!!")
     }
 
-#if !os(OSX)
+#if os(Linux)
     static let allTests = [
         ("testBytes", testBytes),
         ("testIsLessThan", testIsLessThan)
