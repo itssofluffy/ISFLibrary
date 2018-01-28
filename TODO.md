@@ -1,0 +1,1 @@
+- address(of object: UnsafeRawPointer) needs to implemented in swift 4.

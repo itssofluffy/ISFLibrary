@@ -22,6 +22,7 @@
 
 public func address(of object: UnsafeRawPointer) -> Int {
 #if swift(>=3.2)
+    // not sure how to implement this in swift 4
     return Int(bitPattern: object)
 #else
     return unsafeBitCast(object, to: Int.self)
